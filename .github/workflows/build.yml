@@ -1,0 +1,38 @@
+name: Ubuntu Build
+
+on:
+  push:
+    branches:
+      - 'main'
+  pull_request:
+    branches:
+      - 'main'
+      - '*/*'
+      - 'update_flake_lock_action'
+  schedule:
+    - cron: '0 0 * * 1'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Format
+        run: |
+          cargo fmt -- --check
+
+      - name: Build
+        run: |
+          cargo build --all-targets --workspace --all-features --release
+
+      - name: Test
+        run: |
+          cargo test --release --all-targets --workspace --all-features
+
+      - name: Lint
+        run: |
+          cargo clippy --workspace --all-targets --all-features --bins --tests --examples -- -D warnings
