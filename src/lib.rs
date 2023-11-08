@@ -5,6 +5,7 @@ pub mod nll_todo {
     /// return.
     /// # Panics
     /// Always panics.
+    #[allow(clippy::unnecessary_literal_unwrap)]
     #[deprecated]
     pub fn nll_todo<S>() -> S {
         None.unwrap()
