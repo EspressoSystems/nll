@@ -36,19 +36,13 @@
 
         CARGO_TARGET_DIR = "target_dirs/nix_rustc";
 
-        rustOverlay = final: prev: {
-          rustc = fenixStable;
-          cargo = fenixStable;
-          rust-src = fenixStable;
-        };
-
         pkgs = import nixpkgs {
           inherit system;
-          overlays = [ rustOverlay ];
         };
 
         buildDeps = with pkgs;
           [
+            fenixStable
             nixpkgs-fmt
             fenix.packages.${system}.rust-analyzer
           ] ++ lib.optionals stdenv.isDarwin [
@@ -59,7 +53,7 @@
       in {
         devShell = pkgs.mkShell {
           inherit CARGO_TARGET_DIR;
-          buildInputs = [ fenixStable ] ++ buildDeps;
+          buildInputs = buildDeps;
         };
 
       });
